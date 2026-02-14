@@ -17,6 +17,7 @@
 
     // Other Outputs
     "moduleResolution": "node",
+    "rootDir": "src",
     "outDir": "dist",
     "esModuleInterop": true,
     "resolveJsonModule": true,
