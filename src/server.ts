@@ -8,7 +8,7 @@ import rateLimit from "express-rate-limit";
 /* ✅ Load env FIRST */
 dotenv.config();
 
-/* ✅ Import routes (NO .js extension in TS) */
+/* ✅ Import routes */
 import authRoutes from "./routes/auth";
 import blogRoutes from "./routes/blogs";
 import eventRoutes from "./routes/events";
@@ -18,23 +18,39 @@ import adminAuthRoutes from "./routes/adminAuth";
 
 const app = express();
 
-/* ✅ Middlewares */
+/* ✅ Security headers */
 app.use(helmet());
+
+/* ✅ CORS (FIXED) */
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://192.168.43.28:3000",
+  "https://health-ngo-frontend.vercel.app",
+];
+
 app.use(
   cors({
-    origin: process.env.FRONTEND_ORIGIN || "*",
-    credentials: true
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      return callback(new Error("Not allowed by CORS"));
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
+/* ✅ Body parser */
 app.use(express.json({ limit: "10mb" }));
 
 /* ✅ Rate limiter */
-const limiter = rateLimit({
-  windowMs: 60 * 1000,
-  max: 120
-});
-app.use(limiter);
+app.use(
+  rateLimit({
+    windowMs: 60 * 1000,
+    max: 120,
+  })
+);
 
 /* ✅ API routes */
 app.use("/api/auth", authRoutes);
