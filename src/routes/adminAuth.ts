@@ -8,6 +8,7 @@ const router = Router();
 /**
  * REGISTER ADMIN
  */
+// routes/adminAuth.ts
 router.post("/register", async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
@@ -21,13 +22,27 @@ router.post("/register", async (req: Request, res: Response) => {
       return res.status(409).json({ message: "Admin already exists" });
     }
 
-    const admin = new Admin({ email, password });
-    await admin.save();
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    const admin = await Admin.create({
+      email,
+      password: hashedPassword,
+      role: "admin",
+    });
+
+    // ✅ CREATE TOKEN ON SIGNUP
+    const token = jwt.sign(
+      { id: admin._id, role: admin.role },
+      process.env.JWT_SECRET || "supersecret",
+      { expiresIn: "1d" }
+    );
 
     return res.status(201).json({
+      token,
       message: "Admin registered successfully",
     });
   } catch (error) {
+    console.error(error);
     return res.status(500).json({ message: "Server error" });
   }
 });
