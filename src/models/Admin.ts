@@ -1,40 +1,37 @@
-import mongoose, { Schema, Document } from "mongoose";
-import bcrypt from "bcryptjs";
+import mongoose from "mongoose";
 
-export interface IAdmin extends Document {
+interface IAdmin extends mongoose.Document {
   email: string;
   password: string;
   role: "admin";
 }
 
-const AdminSchema = new Schema<IAdmin>({
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    lowercase: true,
-    trim: true,
+const AdminSchema = new mongoose.Schema<IAdmin>(
+  {
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    role: {
+      type: String,
+      enum: ["admin"],
+      default: "admin",
+    },
   },
-  password: {
-    type: String,
-    required: true,
-  },
-  role: {
-    type: String,
-    enum: ["admin"],
-    default: "admin",
-  },
-});
+  {
+    timestamps: true, // adds createdAt and updatedAt
+  }
+);
 
-/**
- * Hash password before saving
- */
-AdminSchema.pre<IAdmin>("save", async function () {
-  if (!this.isModified("password")) return;
-
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
-});
+// ❌ REMOVE the pre-save hook - you're already hashing in the controller
+// This was causing double hashing and the TypeScript errors
 
 const Admin = mongoose.model<IAdmin>("Admin", AdminSchema);
 export default Admin;
