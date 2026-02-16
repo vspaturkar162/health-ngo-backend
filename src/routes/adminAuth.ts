@@ -115,7 +115,7 @@ router.post("/register", async (req: Request, res: Response) => {
       password: hashedPassword,
       role: "admin",
     });
-
+    console.log("ADMIN CREATED:", admin);
     const token = jwt.sign(
       { id: admin._id, role: admin.role },
       process.env.JWT_SECRET || "supersecret",
