@@ -45,10 +45,12 @@ app.use(
     origin: [
       "http://localhost:3000",
       "http://192.168.43.28:3000",
+      "https://health-ngo-frontend.vercel.app", // ✅ Your actual Vercel URL
       "https://health-ngo-frontend-h7jzf88e4-vaishnavi-paturkars-projects.vercel.app"
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true // ✅ Add this
   })
 );
 /* ✅ Body parser */
