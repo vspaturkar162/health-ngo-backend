@@ -17,7 +17,7 @@ import resourcesRoutes from "./routes/resources_temp";
 import adminAuthRoutes from "./routes/adminAuth";
 
 const app = express();
-
+app.set("trust proxy", 1);
 /* ✅ Security headers */
 app.use(helmet());
 
@@ -67,6 +67,7 @@ app.use(
   rateLimit({
     windowMs: 60 * 1000,
     max: 120,
+    validate: { xForwardedForHeader: false }, // ✅ Stops the 500 error
   })
 );
 
