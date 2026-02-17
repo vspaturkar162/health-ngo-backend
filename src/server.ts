@@ -22,37 +22,43 @@ const app = express();
 app.use(helmet());
 
 /* ✅ CORS (FIXED) */
+// const allowedOrigins = [
+//   "http://localhost:3000",
+//   "http://192.168.43.28:3000",
+//   "https://health-ngo-frontend.vercel.app",
+// ];
+
 const allowedOrigins = [
   "http://localhost:3000",
   "http://192.168.43.28:3000",
   "https://health-ngo-frontend.vercel.app",
-];
+  "https://health-ngo-frontend-h7jzf88e4-vaishnavi-paturkars-projects.vercel.app",
+  process.env.FRONTEND_ORIGIN,
+].filter(Boolean) as string[];
 
 // app.use(
 //   cors({
-//     origin: function (origin, callback) {
-//       if (!origin) return callback(null, true);
-//       if (allowedOrigins.includes(origin)) return callback(null, true);
-//       return callback(new Error("Not allowed by CORS"));
-//     },
-//     credentials: true,
+//     origin: [
+//       "http://localhost:3000",
+//       "http://192.168.43.28:3000",
+//       "https://health-ngo-frontend.vercel.app",
+//       "https://health-ngo-frontend-fw27lh4ex-vaishnavi-paturkars-projects.vercel.app" // ✅ THIS is the one in your error logs
+//     ],
 //     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
 //     allowedHeaders: ["Content-Type", "Authorization"],
+//     credentials: true
 //   })
 // );
+
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      "http://192.168.43.28:3000",
-      "https://health-ngo-frontend.vercel.app",
-      "https://health-ngo-frontend-fw27lh4ex-vaishnavi-paturkars-projects.vercel.app" // ✅ THIS is the one in your error logs
-    ],
+    origin: allowedOrigins,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true
+    credentials: true,
   })
 );
+
 /* ✅ Body parser */
 app.use(express.json({ limit: "10mb" }));
 
