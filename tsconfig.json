@@ -17,8 +17,8 @@
 
     // Other Outputs
     "moduleResolution": "node",
-    "rootDir": "src",
-    "outDir": "dist",
+    "outDir": "./dist",
+    "rootDir": "./src",
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "sourceMap": true,
@@ -46,5 +46,6 @@
     // "moduleDetection": "force",
     "skipLibCheck": true,
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"],
 }
