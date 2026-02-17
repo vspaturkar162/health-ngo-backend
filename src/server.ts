@@ -103,12 +103,12 @@
 //   });
 import express from "express";
 import mongoose from "mongoose";
-import dotenv from "dotenv";
+// import dotenv from "dotenv";
 import helmet from "helmet";
 import cors from "cors";
 import rateLimit from "express-rate-limit";
 
-dotenv.config();
+// dotenv.config();
 
 import authRoutes from "./routes/auth";
 import blogRoutes from "./routes/blogs";
