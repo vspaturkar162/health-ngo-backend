@@ -127,6 +127,7 @@ router.post("/register", async (req: Request, res: Response) => {
       message: "Admin registered successfully",
     });
   } catch (error) {
+        console.error("REGISTER ERROR:", error);
     return res.status(500).json({ message: "Server error" });
   }
 });
