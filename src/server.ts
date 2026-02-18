@@ -1,114 +1,8 @@
-// import express from "express";
-// import mongoose from "mongoose";
-// import dotenv from "dotenv";
-// import helmet from "helmet";
-// import cors from "cors";
-// import rateLimit from "express-rate-limit";
-
-// /* ✅ Load env FIRST */
-// dotenv.config();
-
-// /* ✅ Import routes */
-// import authRoutes from "./routes/auth";
-// import blogRoutes from "./routes/blogs";
-// import eventRoutes from "./routes/events";
-// import volunteerRoutes from "./routes/volunteer";
-// import resourcesRoutes from "./routes/resources_temp";
-// import adminAuthRoutes from "./routes/adminAuth";
-
-// const app = express();
-// app.set("trust proxy", 1);
-// /* ✅ Security headers */
-// app.use(helmet());
-
-// /* ✅ CORS (FIXED) */
-// // const allowedOrigins = [
-// //   "http://localhost:3000",
-// //   "http://192.168.43.28:3000",
-// //   "https://health-ngo-frontend.vercel.app",
-// // ];
-
-// const allowedOrigins = [
-//   "http://localhost:3000",
-//   "http://192.168.43.28:3000",
-//   "https://health-ngo-frontend.vercel.app",
-//   "https://health-ngo-frontend-h7jzf88e4-vaishnavi-paturkars-projects.vercel.app",
-//   process.env.FRONTEND_ORIGIN,
-// ].filter(Boolean) as string[];
-
-// // app.use(
-// //   cors({
-// //     origin: [
-// //       "http://localhost:3000",
-// //       "http://192.168.43.28:3000",
-// //       "https://health-ngo-frontend.vercel.app",
-// //       "https://health-ngo-frontend-fw27lh4ex-vaishnavi-paturkars-projects.vercel.app" // ✅ THIS is the one in your error logs
-// //     ],
-// //     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-// //     allowedHeaders: ["Content-Type", "Authorization"],
-// //     credentials: true
-// //   })
-// // );
-
-// app.use(
-//   cors({
-//     origin: allowedOrigins,
-//     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-//     allowedHeaders: ["Content-Type", "Authorization"],
-//     credentials: true,
-//   })
-// );
-
-// /* ✅ Body parser */
-// app.use(express.json({ limit: "10mb" }));
-
-// /* ✅ Rate limiter */
-// app.use(
-//   rateLimit({
-//     windowMs: 60 * 1000,
-//     max: 120,
-//     validate: { xForwardedForHeader: false }, // ✅ Stops the 500 error
-//   })
-// );
-
-// /* ✅ API routes */
-// app.use("/api/auth", authRoutes);
-// app.use("/api/blogs", blogRoutes);
-// app.use("/api/events", eventRoutes);
-// app.use("/api/volunteers", volunteerRoutes);
-// app.use("/api/resources", resourcesRoutes);
-// app.use("/api/admin", adminAuthRoutes);
-
-// /* ✅ Health check */
-// app.get("/api/health", (_req, res) => {
-//   res.json({ ok: true });
-// });
-
-// /* ✅ Database + Server start */
-// const MONGO_URI =
-//   process.env.MONGO_URI || "mongodb://localhost:27017/Health_NGO";
-// const PORT = process.env.PORT || 4000;
-
-// mongoose
-//   .connect(MONGO_URI)
-//   .then(() => {
-//     console.log("✅ MongoDB connected");
-//     app.listen(PORT, () =>
-//       console.log(`🚀 Server running on http://localhost:${PORT}`)
-//     );
-//   })
-//   .catch((err) => {
-//     console.error("❌ MongoDB connection error:", err);
-//     process.exit(1);
-//   });
 import express from "express";
 import mongoose from "mongoose";
-// import dotenv from "dotenv";
 import helmet from "helmet";
 import cors from "cors";
 import rateLimit from "express-rate-limit";
-
-// dotenv.config();
 
 import authRoutes from "./routes/auth";
 import blogRoutes from "./routes/blogs";
@@ -119,31 +13,38 @@ import adminAuthRoutes from "./routes/adminAuth";
 
 const app = express();
 
-/* ✅ Trust Render's proxy — MUST be first */
+/* ✅ Trust Render proxy */
 app.set("trust proxy", 1);
 
+/* ✅ Security headers */
 app.use(helmet());
 
-/* ✅ CORS — allows all Vercel preview URLs */
+/* ✅ CORS — supports Local, Vercel & Netlify */
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Allow requests with no origin (mobile apps, curl, Postman)
+      // Allow server-to-server, Postman, curl
       if (!origin) return callback(null, true);
 
       const allowed =
         origin === "http://localhost:3000" ||
         origin === "http://192.168.43.28:3000" ||
+
+        // Vercel production
         origin === "https://health-ngo-frontend.vercel.app" ||
-        // ✅ This allows ALL Vercel preview deployments for your project
-        /^https:\/\/health-ngo-frontend-.*\.vercel\.app$/.test(origin);
+
+        // Vercel preview deployments
+        /^https:\/\/health-ngo-frontend-.*\.vercel\.app$/.test(origin) ||
+
+        // Netlify deployments (ALL)
+        /^https:\/\/.*\.netlify\.app$/.test(origin);
 
       if (allowed) {
-        callback(null, true);
-      } else {
-        console.log("❌ CORS blocked origin:", origin);
-        callback(new Error("Not allowed by CORS"));
+        return callback(null, true);
       }
+
+      console.log("❌ CORS blocked origin:", origin);
+      return callback(new Error("Not allowed by CORS"));
     },
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -151,17 +52,19 @@ app.use(
   })
 );
 
+/* ✅ Body parser */
 app.use(express.json({ limit: "10mb" }));
 
-/* ✅ Rate limiter — fixed for Render proxy */
+/* ✅ Rate limiter (Render-safe) */
 app.use(
   rateLimit({
     windowMs: 60 * 1000,
     max: 120,
-    validate: { xForwardedForHeader: false }, // ✅ Fixes the 500 error
+    validate: { xForwardedForHeader: false },
   })
 );
 
+/* ✅ Routes */
 app.use("/api/auth", authRoutes);
 app.use("/api/blogs", blogRoutes);
 app.use("/api/events", eventRoutes);
@@ -169,12 +72,13 @@ app.use("/api/volunteers", volunteerRoutes);
 app.use("/api/resources", resourcesRoutes);
 app.use("/api/admin", adminAuthRoutes);
 
+/* ✅ Health check */
 app.get("/api/health", (_req, res) => {
   res.json({ ok: true });
 });
 
-const MONGO_URI =
-  process.env.MONGO_URI as string;
+/* ✅ Mongo + Server */
+const MONGO_URI = process.env.MONGO_URI as string;
 const PORT = process.env.PORT || 4000;
 
 mongoose
@@ -189,4 +93,3 @@ mongoose
     console.error("❌ MongoDB connection error:", err);
     process.exit(1);
   });
-""  
