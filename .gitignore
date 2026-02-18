@@ -5,7 +5,6 @@ node_modules
 .env
 
 # build output
-dist
 
 # logs
 npm-debug.log*
