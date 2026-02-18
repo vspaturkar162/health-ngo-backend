@@ -174,7 +174,7 @@ app.get("/api/health", (_req, res) => {
 });
 
 const MONGO_URI =
-  process.env.MONGO_URI || "mongodb://localhost:27017/Health_NGO";
+  process.env.MONGO_URI || "mongodb://localhost:27017/health_ngo";
 const PORT = process.env.PORT || 4000;
 
 mongoose
