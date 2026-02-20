@@ -10,6 +10,8 @@ import eventRoutes from "./routes/events";
 import volunteerRoutes from "./routes/volunteer";
 import resourcesRoutes from "./routes/resources_temp";
 import adminAuthRoutes from "./routes/adminAuth";
+import aboutRoutes from "./routes/about";
+
 
 const app = express();
 
@@ -71,7 +73,7 @@ app.use("/api/events", eventRoutes);
 app.use("/api/volunteers", volunteerRoutes);
 app.use("/api/resources", resourcesRoutes);
 app.use("/api/admin", adminAuthRoutes);
-
+app.use("/api/about", aboutRoutes);
 /* ✅ Health check */
 app.get("/api/health", (_req, res) => {
   res.json({ ok: true });
