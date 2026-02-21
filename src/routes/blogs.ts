@@ -2,7 +2,9 @@ import { Router } from "express";
 import Blog from "../models/Blog";
 import upload from "../middlewares/upload";
 const router = Router();
-
+router.options("/", (_req, res) => {
+  res.sendStatus(200);
+});
 /**
  * GET all blogs (public)
  */
