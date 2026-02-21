@@ -1,6 +1,6 @@
 import { Router } from "express";
 import Blog from "../models/Blog";
-
+import upload from "../middlewares/upload";
 const router = Router();
 
 /**
@@ -23,8 +23,14 @@ router.get("/:id", async (req, res) => {
 /**
  * CREATE blog (admin)
  */
-router.post("/", async (req, res) => {
-  const blog = new Blog(req.body);
+router.post("/", upload.single("image"), async (req, res) => {
+  const blog = new Blog({
+    title: req.body.title,
+    excerpt: req.body.excerpt,
+    content: req.body.content,
+    image: req.file?.path, // Cloudinary URL
+  });
+
   await blog.save();
   res.status(201).json(blog);
 });
