@@ -25,17 +25,27 @@ router.get("/:id", async (req, res) => {
 /**
  * CREATE blog (admin)
  */
-router.post("/", upload.single("image"), async (req, res) => {
-  const blog = new Blog({
-    title: req.body.title,
-    excerpt: req.body.excerpt,
-    content: req.body.content,
-    image: req.file?.path, // Cloudinary URL
-  });
+router.post(
+  "/",
+  upload.single("image"), // 🔥 THIS WAS MISSING
+  async (req, res) => {
+    try {
+      const blog = new Blog({
+        title: req.body.title,
+        excerpt: req.body.excerpt,
+        content: req.body.content,
+        image: req.file ? req.file.path : null,
+      });
 
-  await blog.save();
-  res.status(201).json(blog);
-});
+      await blog.save();
+      res.status(201).json(blog);
+    } catch (err) {
+      console.error("❌ Blog upload error:", err);
+      res.status(500).json({ message: "Blog creation failed" });
+    }
+  }
+);
+
 
 /**
  * UPDATE blog (admin)
