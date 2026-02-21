@@ -3,6 +3,7 @@ import Blog from "../models/Blog";
 import upload from "../middlewares/upload";
 import cloudinary from "../config/cloudinary";
 const router = Router();
+
 router.options("/", (_req, res) => {
   res.sendStatus(200);
 });
@@ -40,7 +41,7 @@ router.post(
         content: req.body.content,
         slug: slug, // ✅ add this
         author: "000000000000000000000000",
-        image: req.file ? req.file.path : null,
+        image: req.body.image || undefined,
       });
 
       await blog.save();

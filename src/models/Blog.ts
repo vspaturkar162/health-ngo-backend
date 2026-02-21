@@ -6,6 +6,7 @@ export interface IBlog extends Document {
   excerpt?: string;
   author: Types.ObjectId;// user id
   tags: string[];
+  image?: string;
   publishedAt?: Date;
 }
 const BlogSchema = new Schema<IBlog>({
@@ -15,7 +16,8 @@ const BlogSchema = new Schema<IBlog>({
   excerpt: String,
   author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   tags: [String],
-  publishedAt: Date
+  publishedAt: Date,
+  image: { type: String },
 }, { timestamps: true });
 
 export default mongoose.model<IBlog>('Blog', BlogSchema);
