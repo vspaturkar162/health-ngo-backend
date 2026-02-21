@@ -30,10 +30,15 @@ router.post(
   upload.single("image"), // 🔥 THIS WAS MISSING
   async (req, res) => {
     try {
+      const slug = req.body.title
+        .toLowerCase()
+        .replace(/\s+/g, "-");
       const blog = new Blog({
         title: req.body.title,
         excerpt: req.body.excerpt,
         content: req.body.content,
+        slug: slug, // ✅ add this
+        author: "000000000000000000000000",
         image: req.file ? req.file.path : null,
       });
 
