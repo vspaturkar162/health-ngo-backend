@@ -1,6 +1,6 @@
 import { Router } from "express";
 import Blog from "../models/Blog";
-import upload from "../middlewares/upload";
+import {uploadImage} from "../middlewares/upload";
 import cloudinary from "../config/cloudinary";
 const router = Router();
 
@@ -29,7 +29,7 @@ router.get("/:id", async (req, res) => {
  */
 router.post(
   "/",
-  upload.single("image"), // 🔥 THIS WAS MISSING
+  uploadImage.single("image"), // 🔥 THIS WAS MISSING
   async (req, res) => {
     try {
       const slug = req.body.title

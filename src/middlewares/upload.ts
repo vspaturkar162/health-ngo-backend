@@ -27,7 +27,7 @@ const imageStorage = new CloudinaryStorage({
     allowed_formats: ["jpg", "png", "jpeg", "webp"],
   } as any,
 });
-
+export const uploadImage = multer({ storage: imageStorage });
 /* 📄 PDF upload (resources only) */
 const pdfStorage = new CloudinaryStorage({
   cloudinary,
@@ -37,5 +37,5 @@ const pdfStorage = new CloudinaryStorage({
   }),
 });
 
-export const uploadImage = multer({ storage: imageStorage });
+
 export const uploadPDF = multer({ storage: pdfStorage });
