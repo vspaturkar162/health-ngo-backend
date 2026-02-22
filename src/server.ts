@@ -12,6 +12,8 @@ import resourcesRoutes from "./routes/resources_temp";
 import adminAuthRoutes from "./routes/adminAuth";
 import aboutRoutes from "./routes/about";
 import peopleRoutes from "./routes/people";
+import donationRoutes from "./routes/donationRoutes";
+import adminRoutes from "./routes/adminRoutes";
 
 const app = express();
 
@@ -75,6 +77,8 @@ app.use("/api/resources", resourcesRoutes);
 app.use("/api/admin", adminAuthRoutes);
 app.use("/api/about", aboutRoutes);
 app.use("/api/people", peopleRoutes);
+app.use("/api/donations", donationRoutes);
+app.use("/api/admin", adminRoutes);
 /* ✅ Health check */
 app.get("/api/health", (_req, res) => {
   res.json({ ok: true });
