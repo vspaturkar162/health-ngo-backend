@@ -15,7 +15,7 @@ import peopleRoutes from "./routes/people";
 import donationRoutes from "./routes/donationRoutes";
 import adminRoutes from "./routes/adminRoutes";
 import crisisRoutes from "./routes/crisisRoutes";
-
+import socialLinksRoutes from "./routes/socialLinks";
 const app = express();
 
 /* ✅ Trust Render proxy */
@@ -82,6 +82,7 @@ app.use("/api/donations", donationRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/crisis", crisisRoutes);
 app.use("/api/events", eventRoutes);
+app.use("/api/social-links", socialLinksRoutes);
 /* ✅ Health check */
 app.get("/api/health", (_req, res) => {
   res.json({ ok: true });
