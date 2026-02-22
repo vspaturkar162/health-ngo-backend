@@ -81,6 +81,7 @@ app.use("/api/people", peopleRoutes);
 app.use("/api/donations", donationRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/crisis", crisisRoutes);
+app.use("/api/events", eventRoutes);
 /* ✅ Health check */
 app.get("/api/health", (_req, res) => {
   res.json({ ok: true });
