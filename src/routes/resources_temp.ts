@@ -1,5 +1,6 @@
 import { Router } from "express";
 import Resource from "../models/Resource";
+import upload from "../middlewares/upload";
 
 const router = Router();
 
@@ -10,13 +11,28 @@ router.get("/", async (_req, res) => {
 });
 
 /* ✅ CREATE resource (admin) */
-router.post("/", async (req, res) => {
-  const resource = new Resource(req.body);
-  await resource.save();
-  res.status(201).json(resource);
+router.post("/", upload.single("file"), async (req, res) => {
+  try {
+    const { title, category, date } = req.body;
+
+    if (!req.file) {
+      return res.status(400).json({ message: "PDF file is required" });
+    }
+
+    const resource = await Resource.create({
+      title,
+      category,
+      date,
+      fileUrl: (req.file as any).path, // ✅ Cloudinary URL
+    });
+
+    res.status(201).json(resource);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to create resource" });
+  }
 });
 
-/* ✅ DELETE resource (admin) */
+/* ✅ DELETE resource */
 router.delete("/:id", async (req, res) => {
   await Resource.findByIdAndDelete(req.params.id);
   res.json({ message: "Resource deleted" });

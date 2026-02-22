@@ -5,8 +5,9 @@ import cloudinary from "../config/cloudinary";
 const storage = new CloudinaryStorage({
   cloudinary,
   params: {
-    folder: "health-ngo/blogs",
-    allowed_formats: ["jpg", "png", "jpeg", "webp"],
+    folder: ["health-ngo/blogs","health-ngo/resources"],
+    resource_type: "raw",
+    allowed_formats: ["jpg", "png", "jpeg", "webp", "pdf"],
   } as any,
 });
 
