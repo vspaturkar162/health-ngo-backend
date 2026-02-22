@@ -14,6 +14,7 @@ import aboutRoutes from "./routes/about";
 import peopleRoutes from "./routes/people";
 import donationRoutes from "./routes/donationRoutes";
 import adminRoutes from "./routes/adminRoutes";
+import crisisRoutes from "./routes/crisisRoutes";
 
 const app = express();
 
@@ -79,6 +80,7 @@ app.use("/api/about", aboutRoutes);
 app.use("/api/people", peopleRoutes);
 app.use("/api/donations", donationRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/crisis", crisisRoutes);
 /* ✅ Health check */
 app.get("/api/health", (_req, res) => {
   res.json({ ok: true });
