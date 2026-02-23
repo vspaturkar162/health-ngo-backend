@@ -41,7 +41,9 @@ router.post(
         content: req.body.content,
         slug: slug, // ✅ add this
         author: "000000000000000000000000",
-        image: req.body.image || undefined,
+        image: req.file
+          ? (req.file as any).path // Cloudinary secure URL
+          : undefined,
       });
 
       await blog.save();
